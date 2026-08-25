@@ -26,6 +26,28 @@ type BookState struct {
 
 type Store struct{ dir string }
 
+func (s *Store) ListBooks() ([]BookState, error) {
+	entries, err := os.ReadDir(s.dir)
+	if err != nil {
+		return nil, err
+	}
+	books := make([]BookState, 0)
+	for _, entry := range entries {
+		if entry.IsDir() || entry.Name() == "config.yml" || filepath.Ext(entry.Name()) != ".yml" {
+			continue
+		}
+		data, readErr := os.ReadFile(filepath.Join(s.dir, entry.Name()))
+		if readErr != nil {
+			return nil, readErr
+		}
+		var state BookState
+		if yaml.Unmarshal(data, &state) == nil && state.Path != "" {
+			books = append(books, state)
+		}
+	}
+	return books, nil
+}
+
 func NewStore() (*Store, error) {
 	home, err := os.UserHomeDir()
 	if err != nil {

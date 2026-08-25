@@ -15,7 +15,7 @@ func TestParserParsesBookAndNestedSections(t *testing.T) {
 	if book.Title != "The Book" {
 		t.Fatalf("Title = %q, want %q", book.Title, "The Book")
 	}
-	want := "Chapter one\n\nHello, reader.\n\nNested paragraph."
+	want := "    Chapter one\n    Hello, reader.\n    Nested paragraph."
 	if book.Text != want {
 		t.Fatalf("Text = %q, want %q", book.Text, want)
 	}

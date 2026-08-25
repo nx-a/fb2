@@ -47,7 +47,7 @@ func (Parser) Parse(r io.Reader) (domain.Book, error) {
 			collect(s, &parts)
 		}
 	}
-	book.Text = strings.Join(nonEmpty(parts), "\n\n")
+	book.Text = strings.Join(nonEmpty(parts), "\n")
 	if book.Title == "" {
 		book.Title = "Без названия"
 	}
@@ -69,6 +69,9 @@ func nonEmpty(in []string) []string {
 	out := make([]string, 0, len(in))
 	for _, p := range in {
 		if p = clean(p); p != "" {
+			if !strings.HasPrefix(p, "-") {
+				p = "    " + p
+			}
 			out = append(out, p)
 		}
 	}
